@@ -92,20 +92,13 @@ def naive():
 # Creates the k-Shingles of each document and returns a list of them
 
 def k_shingles():
-
-    k = 5
-
-    docs_k_shingles = []  # holds the k-shingles of each document 
-
-    for doc in document_list.values():
-
-        words = doc.split()
-
-        shingles = [' '.join(words[i:i+k]) for i in range(len(words) - k + 1)]
-
-        docs_k_shingles.append(set(shingles)) 
-
-    return docs_k_shingles
+    k = 5
+    docs_k_shingles = []# holds the k-shingles of each document 
+    for doc in document_list.values():
+        words = doc.split()
+        shingles = [' '.join(words[i:i+k]) for i in range(len(words) - k + 1)]
+        docs_k_shingles.append(set(shingles))
+    return docs_k_shingles
 
 
 # METHOD FOR TASK 2
