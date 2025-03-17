@@ -136,7 +136,6 @@ def signature_set(k_shingles):
     for i in range(len(k_shingles)):
         # Each document is represented by a set of 5-shingles
         for shingle in k_shingles[i]:
-            print(f"shingle: {shingle}")
             # get the index of the shingle in the unique shingles
             shingle_index = unique_shingles.index(shingle)
             docs_sig_sets[i][shingle_index] = 1
