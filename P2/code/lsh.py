@@ -123,7 +123,6 @@ def signature_set(k_shingles):
     # find all the unique shingles
     unique_shingles = list(set.union(*k_shingles))
     print(f"found {len(unique_shingles)} unique shingles")
-    print(type(unique_shingles))
 
     """
     initialize the signature matrix with zeros.
@@ -131,14 +130,13 @@ def signature_set(k_shingles):
     and the number of columns equal to the number of documents
     """
     docs_sig_sets = np.zeros((len(k_shingles), len(unique_shingles)))
-    
+
     # set the signature matrix
     for i in range(len(k_shingles)):
-        # Each document is represented by a set of 5-shingles
-        for shingle in k_shingles[i]:
-            # get the index of the shingle in the unique shingles
-            shingle_index = unique_shingles.index(shingle)
-            docs_sig_sets[i][shingle_index] = 1
+        for j in range(len(unique_shingles)):
+            if unique_shingles[j] in k_shingles[i]:
+                docs_sig_sets[i, j] = 1
+    return docs_sig_sets
 
 # METHOD FOR TASK 3
 
@@ -147,7 +145,12 @@ def signature_set(k_shingles):
 def generate_hash_functions(num_perm, N):
     hash_funcs = []
 
-    # implement your code here
+    p = 2**31 - 1  # A large prime number
+    
+    for _ in range(num_perm):
+        a = random.randint(1, p - 1)
+        b = random.randint(0, p - 1)
+        hash_funcs.append(lambda x, a=a, b=b, p=p, N=N: ((a * x + b) % p) % N)
 
     return hash_funcs
 
@@ -157,6 +160,17 @@ def minHash(docs_signature_sets, hash_fn):
     min_hash_signatures = []
 
     # implement your code here
+    
+    for col_id in range(len(docs_signature_sets[0])):
+        # For each row (document)
+        for row_id, row in enumerate(docs_signature_sets):
+            # If this feature is present in the document
+            if row[col_id] == 1:
+                # Update signature with minimum hash value
+                for h_id, hash_func in enumerate(hash_fn):
+                    hash_value = hash_func(col_id)
+                    if hash_value < min_hash_signatures[h_id][row_id]:
+                        min_hash_signatures[h_id][row_id] = hash_value
 
     return min_hash_signatures
 
