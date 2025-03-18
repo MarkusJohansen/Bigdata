@@ -97,4 +97,4 @@ using the three hashes instead of all the shingles lets us do this much more com
 | 2&4  | 66%                |
 | 3&4  | 0                  |
 
-No it is not consistent. As we can see the high granularity of just comparing 3 elements (using the 3 hash values) reduces the accuracy very much. It says that 1&3 is not similar, and the other pairs are in fact similar
+1&3 Is still the most similar sentences!
