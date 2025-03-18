@@ -78,12 +78,11 @@ We have three hash functions, which are lists of indices between 1 and 10. Hashi
 In min hash we want to find the first index, where the value is `1` for each sentence and each hash-function.
 I will use 1 indexing for this case:
 
-| Sentence | h1  | h2  | h3  |
-| -------- | --- | --- | --- |
-| 1        | 7   | 3   | 10  |
-| 2        | 5   | 9   | 10  |
-| 3        | 5   | 6   | 1   |
-| 4        | 6   | 6   | 10  |
+| hashfunc | sentence 1 | sentence 2 | sentence 3 | sentence 4 |
+| -------- | ---------- | ---------- | ---------- | ---------- |
+| h1       | 1          | 2          | 1          | 2          |
+| h2       | 1          | 2          | 1          | 2          |
+| h3       | 2          | 1          | 2          | 3          |
 
 ### Computing similarity from min hash-matrix
 
@@ -91,11 +90,11 @@ using the three hashes instead of all the shingles lets us do this much more com
 
 | Pair | Jaccard-similarity |
 | ---- | ------------------ |
-| 1&2  | 1/3 = 0.33         |
-| 1&3  | 0                  |
-| 1&4  | 1/3 = 0.33         |
-| 2&3  | 1/3 = 0.33         |
-| 2&4  | 1/3 = 0.33         |
-| 3&4  | 1/3 = 0.33         |
+| 1&2  | 0                  |
+| 1&3  | 100%               |
+| 1&4  | 0                  |
+| 2&3  | 0                  |
+| 2&4  | 66%                |
+| 3&4  | 0                  |
 
 No it is not consistent. As we can see the high granularity of just comparing 3 elements (using the 3 hash values) reduces the accuracy very much. It says that 1&3 is not similar, and the other pairs are in fact similar
