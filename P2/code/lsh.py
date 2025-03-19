@@ -138,6 +138,7 @@ def signature_set(k_shingles):
                 docs_sig_sets[i, j] = 1
     return docs_sig_sets
 
+
 # METHOD FOR TASK 3
 
 
@@ -146,7 +147,7 @@ def generate_hash_functions(num_perm, N):
     hash_funcs = []
 
     p = 2**31 - 1  # A large prime number
-    
+
     for _ in range(num_perm):
         a = random.randint(1, p - 1)
         b = random.randint(0, p - 1)
@@ -160,7 +161,11 @@ def minHash(docs_signature_sets, hash_fn):
     min_hash_signatures = []
 
     # implement your code here
-    
+
+    # initialize the min hash signatures
+    min_hash_signatures = np.full((len(hash_fn), len(docs_signature_sets)), np.inf)
+
+    # For each column (feature)
     for col_id in range(len(docs_signature_sets[0])):
         # For each row (document)
         for row_id, row in enumerate(docs_signature_sets):
@@ -168,7 +173,7 @@ def minHash(docs_signature_sets, hash_fn):
             if row[col_id] == 1:
                 # Update signature with minimum hash value
                 for h_id, hash_func in enumerate(hash_fn):
-                    hash_value = hash_func(col_id)
+                    hash_value = hash_func(col_id + 1)
                     if hash_value < min_hash_signatures[h_id][row_id]:
                         min_hash_signatures[h_id][row_id] = hash_value
 
@@ -181,9 +186,26 @@ def lsh(m_matrix):
     candidates = []  # list of candidate sets of documents for checking similarity
 
     # implement your code here
+    number_of_rows = m_matrix.shape[1]
+    bands = np.array_split(m_matrix, parameters_dictionary["b"], axis=0)
+    
+    # Assign each document to buckets in different bands
+    for band in bands:
+        buckets = {}
+        for document_id in range(number_of_rows):
+            signature = tuple(band[:, document_id].astype(int))
+            if signature in buckets:
+                buckets[signature].append(document_id)
+            else:
+                buckets[signature] = [document_id]
 
-    return candidates
-
+        #Candidate pairs
+        for documents in buckets.values():
+            if len(documents) > 1:
+                for pair in combinations(documents, 2):
+                    candidates.append(pair)
+                    
+    return list(set(candidates))
 
 # METHOD FOR TASK 5
 # Calculates the similarities of the candidate documents
