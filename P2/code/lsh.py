@@ -188,7 +188,7 @@ def lsh(m_matrix):
     # implement your code here
     number_of_rows = m_matrix.shape[1]
     bands = np.array_split(m_matrix, parameters_dictionary["b"], axis=0)
-    
+
     # Assign each document to buckets in different bands
     for band in bands:
         buckets = {}
@@ -199,22 +199,46 @@ def lsh(m_matrix):
             else:
                 buckets[signature] = [document_id]
 
-        #Candidate pairs
+        # Candidate pairs
         for documents in buckets.values():
             if len(documents) > 1:
                 for pair in combinations(documents, 2):
                     candidates.append(pair)
-                    
+
     return list(set(candidates))
+
 
 # METHOD FOR TASK 5
 # Calculates the similarities of the candidate documents
 def candidates_similarities(candidate_docs, min_hash_matrix):
-    similarity_dict = []
+    # List to store dictionaries of document pairs and their similarities
+    similarity_list = []
 
-    # implement your code here
+    # Get number of hash functions (permutations)
+    num_permutations = min_hash_matrix.shape[0]
 
-    return similarity_dict
+    # Remove duplicate candidate pairs
+    candidate_docs = list(set(candidate_docs))
+
+    # Calculate similarity for each candidate pair
+    for doc1, doc2 in candidate_docs:
+        # Get signatures for both documents
+        sig1 = min_hash_matrix[:, doc1]
+        sig2 = min_hash_matrix[:, doc2]
+
+        # Count matching hash values
+        matches = np.sum(sig1 == sig2)
+
+        # Calculate similarity as fraction of matching hashes
+        similarity = matches / num_permutations
+
+        # If similarity is above threshold, add to list
+        if similarity >= parameters_dictionary["t"]:
+            # Create a dictionary for this pair
+            pair_dict = {(doc1, doc2): similarity}
+            similarity_list.append(pair_dict)
+
+    return similarity_list
 
 
 # DO NOT CHANGE THIS METHOD
